@@ -1,4 +1,4 @@
-package com.dennisce.socialcarnival
+package com.dennisce.socialcarnival.Handler
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -7,6 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import com.blankj.utilcode.util.LogUtils
+import com.dennisce.socialcarnival.config.SocialConfig
+import com.dennisce.socialcarnival.enums.SocialShareType
+import com.dennisce.socialcarnival.tools.jsonToMap
+import com.dennisce.socialcarnival.tools.saveBitmap
 import com.dennisce.socialcarnival.shareMedia.ImageShareMedia
 import com.dennisce.socialcarnival.shareMedia.ShareMedia
 import com.dennisce.socialcarnival.shareMedia.VoiceShareMedia
@@ -29,7 +33,8 @@ import java.util.*
  * @create: 19-4-22
  **/
 
-class QQHandler(context: Context, socialConfig: SocialConfig) : SocialHandler {
+class QQHandler(context: Context, socialConfig: SocialConfig) :
+    SocialHandler {
 
     private val mTencent by lazy {
         Tencent.createInstance(socialConfig.qqAppId, context.applicationContext)

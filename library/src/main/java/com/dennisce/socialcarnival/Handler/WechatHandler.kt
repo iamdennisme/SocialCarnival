@@ -1,10 +1,14 @@
-package com.dennisce.socialcarnival
+package com.dennisce.socialcarnival.Handler
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import com.blankj.utilcode.util.LogUtils
+import com.dennisce.socialcarnival.config.SocialConfig
+import com.dennisce.socialcarnival.enums.SocialShareType
+import com.dennisce.socialcarnival.tools.bitmap2Bytes
+import com.dennisce.socialcarnival.tools.compressBitmap
 import com.dennisce.socialcarnival.shareMedia.*
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp

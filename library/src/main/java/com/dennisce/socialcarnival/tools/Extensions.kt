@@ -1,8 +1,7 @@
-package com.dennisce.socialcarnival
+package com.dennisce.socialcarnival.tools
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.blankj.utilcode.util.Utils
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File

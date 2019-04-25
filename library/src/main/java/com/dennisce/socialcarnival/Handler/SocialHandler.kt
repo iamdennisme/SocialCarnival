@@ -1,6 +1,7 @@
-package com.dennisce.socialcarnival
+package com.dennisce.socialcarnival.Handler
 
 import android.app.Activity
+import com.dennisce.socialcarnival.enums.SocialShareType
 import com.dennisce.socialcarnival.shareMedia.ShareMedia
 import io.reactivex.Observable
 

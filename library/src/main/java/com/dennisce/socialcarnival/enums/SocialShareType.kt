@@ -1,4 +1,4 @@
-package com.dennisce.socialcarnival
+package com.dennisce.socialcarnival.enums
 
 /**
  * @program: SocialCarnival

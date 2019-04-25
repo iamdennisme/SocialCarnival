@@ -3,6 +3,12 @@ package com.dennisce.socialcarnival
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.dennisce.socialcarnival.config.SocialConfig
+import com.dennisce.socialcarnival.Handler.QQHandler
+import com.dennisce.socialcarnival.Handler.SocialHandler
+import com.dennisce.socialcarnival.Handler.WechatHandler
+import com.dennisce.socialcarnival.enums.SocialAuthorizeType
+import com.dennisce.socialcarnival.enums.SocialShareType
 import com.dennisce.socialcarnival.shareMedia.ShareMedia
 import io.reactivex.Observable
 import java.lang.ref.WeakReference
@@ -22,7 +28,7 @@ class SocialCarnival private constructor() {
             weekReference = WeakReference(context)
         }
 
-        val INSTANCE: SocialCarnival by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val get: SocialCarnival by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             if (weekReference == null) {
                 throw Exception("SocialCarnival:you must init in Application first")
             }
