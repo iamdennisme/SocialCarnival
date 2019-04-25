@@ -12,7 +12,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 class WXEntryActivity : Activity(), IWXAPIEventHandler {
 
     private val weChatHandler: WechatHandler by lazy {
-        SocialCarnival.INSTANCE.getSocialHandler(SocialAuthorizeType.WECHAT) as WechatHandler
+        SocialCarnival.get.getSocialHandler(SocialAuthorizeType.WECHAT) as WechatHandler
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
