@@ -105,6 +105,13 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
             })
 ```
 
+### proguard-rules
+```
+#qq & weixin
+-dontwarn  com.tencent.**
+-keep class com.tencent.** {*;}
+```
+
 ### other
 - implement ShareMedia classes for sharing
 - Please refer to the implementation of logic QQHandler or WechatHandler
