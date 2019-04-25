@@ -2,7 +2,7 @@ package com.dennisce.socialcarnival.wechat
 
 import android.app.Activity
 import android.os.Bundle
-import com.dennisce.socialcarnival.Handler.WechatHandler
+import com.dennisce.socialcarnival.handler.WechatHandler
 import com.dennisce.socialcarnival.enums.SocialAuthorizeType
 import com.dennisce.socialcarnival.SocialCarnival
 import com.tencent.mm.opensdk.modelbase.BaseReq

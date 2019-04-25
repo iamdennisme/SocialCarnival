@@ -1,4 +1,4 @@
-package com.dennisce.socialcarnival.Handler
+package com.dennisce.socialcarnival.handler
 
 import android.app.Activity
 import com.dennisce.socialcarnival.enums.SocialShareType

@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.dennisce.socialcarnival.config.SocialConfig
-import com.dennisce.socialcarnival.Handler.QQHandler
-import com.dennisce.socialcarnival.Handler.SocialHandler
-import com.dennisce.socialcarnival.Handler.WechatHandler
+import com.dennisce.socialcarnival.handler.QQHandler
+import com.dennisce.socialcarnival.handler.SocialHandler
+import com.dennisce.socialcarnival.handler.WechatHandler
 import com.dennisce.socialcarnival.enums.SocialAuthorizeType
 import com.dennisce.socialcarnival.enums.SocialShareType
 import com.dennisce.socialcarnival.shareMedia.ShareMedia
