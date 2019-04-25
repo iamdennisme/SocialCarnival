@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/iamdennisme/SocialCarnival.svg)](https://jitpack.io/#iamdennisme/SocialCarnival)
 
-Social lib for wechat and qq
+social lib  with rx,just soupport wechat and qq
 
 ## Download
 
