@@ -1,4 +1,4 @@
-# Halia
+# socialcarnival
 
 [![](https://jitpack.io/v/iamdennisme/SocialCarnival.svg)](https://jitpack.io/#iamdennisme/SocialCarnival)
 
