@@ -16,11 +16,19 @@ allprojects {
 }
 ```
 
-- Add the dependency
+- Add the social carnival dependency
 
 ```
 dependencies {
    implementation 'com.github.iamdennisme:SocialCarnival:x.y.z'
+}
+```
+
+* since 1.0.0，i removed social sdk in lib. you should add social sdk in your project
+example
+```
+dependencies {
+       implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.3.1'
 }
 ```
 
