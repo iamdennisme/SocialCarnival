@@ -210,7 +210,7 @@ class WechatHandler(context: Context, socialConfig: SocialConfig) : SocialHandle
 
         //压缩缩略图到32kb
         if (msg.thumbData != null && msg.thumbData.size > K32) {//微信sdk里面判断的大小
-            msg.thumbData.compressBitmap(K32)
+            msg.thumbData= msg.thumbData.compressBitmap(K32)
         }
 
         //发起request
