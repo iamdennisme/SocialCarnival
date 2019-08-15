@@ -9,6 +9,7 @@ import com.dennisce.socialcarnival.handler.SocialHandler
 import com.dennisce.socialcarnival.handler.WechatHandler
 import com.dennisce.socialcarnival.enums.SocialAuthorizeType
 import com.dennisce.socialcarnival.enums.SocialShareType
+import com.dennisce.socialcarnival.pay.PayInfo
 import com.dennisce.socialcarnival.shareMedia.ShareMedia
 import io.reactivex.Observable
 import java.lang.ref.WeakReference
@@ -65,26 +66,52 @@ class SocialCarnival private constructor() {
         return handler
     }
 
-    fun authorize(activity: Activity, socialAuthorizeType: SocialAuthorizeType): Observable<Map<String, String>> {
+    fun authorize(
+        activity: Activity,
+        socialAuthorizeType: SocialAuthorizeType
+    ): Observable<Map<String, String>> {
         return getSocialHandler(socialAuthorizeType).authorize(activity)
     }
 
-    fun share(activity: Activity, socialShareType: SocialShareType, shareMedia: ShareMedia):Observable<SocialShareType>{
-       return when(socialShareType){
-            SocialShareType.WECHAT, SocialShareType.WECHAT_CIRCLE ->{
+    fun pay(
+        activity: Activity,
+        socialAuthorizeType: SocialAuthorizeType,
+        payInfo: PayInfo
+    ): Observable<String> {
+        return getSocialHandler(socialAuthorizeType).pay(activity, payInfo)
+    }
+
+    fun checkClientInstalled(socialAuthorizeType: SocialAuthorizeType): Boolean {
+        if (socialAuthorizeType==SocialAuthorizeType.WECHAT){
+            return (getSocialHandler(socialAuthorizeType) as WechatHandler).getApi().isWXAppInstalled
+        }
+        throw NoSuchMethodException("not implements")
+    }
+
+    fun share(
+        activity: Activity,
+        socialShareType: SocialShareType,
+        shareMedia: ShareMedia
+    ): Observable<SocialShareType> {
+        return when (socialShareType) {
+            SocialShareType.WECHAT, SocialShareType.WECHAT_CIRCLE -> {
                 getSocialHandler(SocialAuthorizeType.WECHAT)
             }
 
-            else->{//QQ
-                 getSocialHandler(SocialAuthorizeType.QQ)
+            else -> {//QQ
+                getSocialHandler(SocialAuthorizeType.QQ)
             }
 
         }.let {
-           return@let it.share(activity,shareMedia,socialShareType)
+            return@let it.share(activity, shareMedia, socialShareType)
         }
     }
 
     fun setActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        (getSocialHandler(SocialAuthorizeType.QQ) as QQHandler).setActivityResult(requestCode, resultCode, data)
+        (getSocialHandler(SocialAuthorizeType.QQ) as QQHandler).setActivityResult(
+            requestCode,
+            resultCode,
+            data
+        )
     }
 }

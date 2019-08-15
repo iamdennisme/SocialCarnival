@@ -9,6 +9,7 @@ import android.os.Environment
 import com.blankj.utilcode.util.LogUtils
 import com.dennisce.socialcarnival.config.SocialConfig
 import com.dennisce.socialcarnival.enums.SocialShareType
+import com.dennisce.socialcarnival.pay.PayInfo
 import com.dennisce.socialcarnival.tools.jsonToMap
 import com.dennisce.socialcarnival.tools.saveBitmap
 import com.dennisce.socialcarnival.shareMedia.ImageShareMedia
@@ -35,6 +36,9 @@ import java.util.*
 
 class QQHandler(context: Context, socialConfig: SocialConfig) :
     SocialHandler {
+    override fun pay(activity: Activity, payInfo: PayInfo): Observable<String> {
+        throw NoSuchMethodException("not implements")
+    }
 
     private val mTencent by lazy {
         Tencent.createInstance(socialConfig.qqAppId, context.applicationContext)

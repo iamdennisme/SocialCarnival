@@ -7,12 +7,16 @@ import android.graphics.Bitmap
 import com.blankj.utilcode.util.LogUtils
 import com.dennisce.socialcarnival.config.SocialConfig
 import com.dennisce.socialcarnival.enums.SocialShareType
+import com.dennisce.socialcarnival.pay.PayInfo
+import com.dennisce.socialcarnival.pay.WechatPayOrder
 import com.dennisce.socialcarnival.tools.bitmap2Bytes
 import com.dennisce.socialcarnival.tools.compressBitmap
 import com.dennisce.socialcarnival.shareMedia.*
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.*
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -32,6 +36,8 @@ import java.util.*
 class WechatHandler(context: Context, socialConfig: SocialConfig) : SocialHandler, IWXAPIEventHandler {
     companion object {
         private const val RETURN_MSG_TYPE_LOGIN = 1
+        private const val RETURN_MSG_TYPE_SHARE = 2
+        private const val RETURN_MSG_TYPE_PAY = 5
         private const val K32 = 1024 * 32
 
         private const val SCOPE = "snsapi_userinfo,snsapi_friend,snsapi_message"
@@ -43,6 +49,8 @@ class WechatHandler(context: Context, socialConfig: SocialConfig) : SocialHandle
     private var mAuthorizeEmitter: Emitter<Map<String, String>>? = null
 
     private var mShareEmitter: Emitter<SocialShareType>? = null
+
+    private var mPayEmitter: Emitter<String>? = null
 
     private var currentShareType = SocialShareType.WECHAT
 
@@ -80,21 +88,43 @@ class WechatHandler(context: Context, socialConfig: SocialConfig) : SocialHandle
             }
             return
         }
-        //分享
-        when (resp.errCode) {
-            BaseResp.ErrCode.ERR_AUTH_DENIED -> {
-                mShareEmitter?.onError(Throwable(resp.errStr))
-                LogUtils.d("share_auth_denied")
+        if (resp.type== RETURN_MSG_TYPE_SHARE){ //分享
+            when (resp.errCode) {
+                BaseResp.ErrCode.ERR_AUTH_DENIED -> {
+                    mShareEmitter?.onError(Throwable(resp.errStr))
+                    LogUtils.d("share_auth_denied")
+                }
+                BaseResp.ErrCode.ERR_OK -> {
+                    mShareEmitter?.onNext(currentShareType)
+                    LogUtils.d("wechat share success")
+                }
+                BaseResp.ErrCode.ERR_USER_CANCEL -> { // 分享取消
+                    LogUtils.d("share_user_cancel")
+                    mShareEmitter?.onError(Throwable("share_user_cancel"))
+                }
             }
-            BaseResp.ErrCode.ERR_OK -> {
-                mShareEmitter?.onNext(currentShareType)
-                LogUtils.d("wechat share success")
-            }
-            BaseResp.ErrCode.ERR_USER_CANCEL -> { // 分享取消
-                LogUtils.d("share_user_cancel")
-                mShareEmitter?.onError(Throwable("share_user_cancel"))
-            }
+            return
         }
+
+        if (resp.type== RETURN_MSG_TYPE_PAY){ //PAY
+            resp as PayResp
+            when (resp.errCode) {
+                BaseResp.ErrCode.ERR_COMM -> {
+                    mPayEmitter?.onError(Throwable(resp.errStr))
+                    LogUtils.d("wechat pay err ${resp.errCode}")
+                }
+                BaseResp.ErrCode.ERR_OK -> {
+                    mPayEmitter?.onNext(resp.prepayId)
+                    LogUtils.d("wechat pay success")
+                }
+                BaseResp.ErrCode.ERR_USER_CANCEL -> { // 分享取消
+                    LogUtils.d("share_pay_cancel")
+                    mPayEmitter?.onError(Throwable("wechat_pay_user_cancel"))
+                }
+            }
+            return
+        }
+
     }
 
     override fun onReq(p0: BaseReq?) {
@@ -115,6 +145,36 @@ class WechatHandler(context: Context, socialConfig: SocialConfig) : SocialHandle
         val req = SendAuth.Req()
         req.scope = SCOPE
         req.state = STATE
+        req.transaction = buildTransaction("authorize")
+        mLastTransaction = req.transaction
+        if (!this.mWXApi.sendReq(req)) {
+            mAuthorizeEmitter?.onError(Throwable("wechat api sendReq fail"))
+            LogUtils.d("wechat api sendReq fail")
+        }
+        return result
+    }
+
+    override fun pay(activity: Activity,payInfo: PayInfo): Observable<String> {
+        if (payInfo !is WechatPayOrder){
+            throw IllegalArgumentException("payinfo must be WechatPayOrder")
+        }
+        val result = Observable.create<String> { emitter ->
+            mPayEmitter = emitter
+        }
+
+        if (!mWXApi.isWXAppInstalled) {
+            mAuthorizeEmitter?.onError(Throwable("wechat not install"))
+            LogUtils.d("wechat not install")
+            return result
+        }
+        val req = PayReq()
+        req.appId = payInfo.appId
+        req.partnerId = payInfo.partnerId
+        req.prepayId = payInfo.prepayId
+        req.packageValue = payInfo.packageValue
+        req.nonceStr = payInfo.nonceStr
+        req.timeStamp = payInfo.timeStamp
+        req.sign = payInfo.sign
         req.transaction = buildTransaction("authorize")
         mLastTransaction = req.transaction
         if (!this.mWXApi.sendReq(req)) {
