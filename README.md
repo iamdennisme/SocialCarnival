@@ -61,7 +61,14 @@ class BaseApplication : Application() {
                 android:exported="true"
                 android:screenOrientation="portrait"
                 android:targetActivity="com.dennisce.socialcarnival.wechat.WXEntryActivity"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"/> 
+
+         <activity-alias
+                    android:name=".wxapi.WXPayEntryActivity"
+                    android:exported="true"
+                    android:screenOrientation="portrait"
+                    android:targetActivity="com.dennisce.socialcarnival.wechat.WXEntryActivity"
+                    android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 ```
 #### if you use qq,do this
 - modify manifest
