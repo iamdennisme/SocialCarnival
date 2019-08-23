@@ -2,6 +2,7 @@ package com.dennisce.socialcarnival.wechat
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
 import com.dennisce.socialcarnival.SocialCarnival
 import com.dennisce.socialcarnival.enums.SocialAuthorizeType
 import com.dennisce.socialcarnival.handler.WechatHandler
@@ -22,11 +23,15 @@ class WXEntryActivity : Activity(), IWXAPIEventHandler {
 
     override fun onReq(req: BaseReq) {
         finish()
-        weChatHandler.onReq(req)
+        Handler().postDelayed({
+            weChatHandler.onReq(req)
+        }, 500)
     }
 
     override fun onResp(resp: BaseResp) {
         finish()
-        weChatHandler.onResp(resp)
+        Handler().postDelayed({
+            weChatHandler.onResp(resp)
+        }, 500)
     }
 }
