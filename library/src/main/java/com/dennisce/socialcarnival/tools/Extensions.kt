@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlin.math.pow
 
 fun JSONObject.jsonToMap(): Map<String, String> {
     val map = HashMap<String, String>()
@@ -34,8 +35,8 @@ fun ByteArray.compressBitmap(byteCount: Int): ByteArray {
         var times = 1
         var percentage: Double
 
-        while (!isFinish && times <= 10) {
-            percentage = Math.pow(0.8, times.toDouble())
+        while (!isFinish && times <= 50) {
+            percentage = 0.8.pow(times.toDouble())
             val compressData = (100.0 * percentage).toInt()
             tmpBitmap.compress(Bitmap.CompressFormat.JPEG, compressData, outputStream)
             if (outputStream.size() < byteCount) {
